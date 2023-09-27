@@ -3,10 +3,8 @@ name: Build and Deploy
 on:
   push:
     branches:
+      - master
       - dev
-  pull_request:
-    branches:
-      - '*'
 
 jobs:
   build:
@@ -24,15 +22,14 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Build the JupyterLite site
         run: |
-          jupyter lite build --contents content --output-dir dist
+          jupyter lite build --contents projects/content --output-dir dist
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./dist
+          path: projects/python-deploy/dist
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/dev'
     permissions:
       pages: write
       id-token: write
